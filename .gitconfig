@@ -1,0 +1,37 @@
+[user]
+	email = cdurianward@gmail.com
+	name = Christopher Ward
+[color]
+  ui = auto
+[core]
+  pager = less -FMRiX
+  editor = code --wait
+  excludesfile = /Users/zardoz/.gitignore_global
+[push]
+	default = simple
+[alias]
+  dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
+  cm = commit
+  br = branch
+  st = status
+  co = checkout
+  unstage = reset HEAD --
+  discard = checkout --
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  last = log -1 HEAD
+  alias = "!sh -c '[ $# = 2 ] && git config --global alias.\"$1\" \"$2\" && exit 0 || echo \"usage: git alias <new alias> <original command>\" >&2 && exit 1' -"
+  aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'
+  amend = commit --amend
+  nbr = "!f() { git checkout -b bagelbits.$1; }; f"
+[difftool "sourcetree"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path =
+[mergetool "sourcetree"]
+  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true
+[remote "origin"]
+  prune = true
+[credential]
+	helper = osxkeychain
+[pull]
+	rebase = false
