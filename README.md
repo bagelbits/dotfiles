@@ -15,3 +15,4 @@
 * [Install vscode](https://code.visualstudio.com/docs?dv=osx)
   * [Setup command line](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
   * Turn on Settings Sync
+* `brew update && brew install --cask stretchly`
