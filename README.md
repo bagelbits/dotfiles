@@ -1,6 +1,3 @@
-# dotfiles
-Dotfiles for development laptops
-
 # Requirements
 * [Homebrew](https://brew.sh/)
 
