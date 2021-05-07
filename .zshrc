@@ -110,20 +110,6 @@ alias zp='cd ~/workspace/zenpayroll'
 # Goes to root of whatever git repo you're in
 alias rt='cd $(git rev-parse --show-toplevel)'
 
-# Runs the pre-commit linting hooks on demand
-alias lint='rt;.git/hooks/pre-commit;cd -'
-
-# Shortcuts for jumping around areas of zp or hi
-alias models='rt;cd app/models'
-alias controllers='rt;cd app/controllers'
-alias services='rt;cd app/services'
-alias jsc='rt;cd frontend/javascripts/components'
-
-# quick rails commands
-alias qspec="NO_PANDA=true FAKE_STE=true bundle exec rspec"
-alias qrake="NO_PANDA=true FAKE_STE=true bundle exec rake"
-alias qrails="NO_PANDA=true FAKE_STE=true bundle exec rails"
-
 # Run 'prep' after you've fetched development of hi or zp
 # This will run all of the required commands in a row.
 prepare_dev()
