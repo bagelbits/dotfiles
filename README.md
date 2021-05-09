@@ -3,7 +3,7 @@
 
 # Setup (this will require some tuning)
 * [RunCat](https://apps.apple.com/us/app/runcat/id1429033973?mt=12)
-* `brew install —cask iterm`
+* `brew install -—cask iterm2`
   * switch colors to solarized dark
   * [Background behind iTerm](https://i.imgur.com/wimz70n.jpg)
 * `brew install zsh`
