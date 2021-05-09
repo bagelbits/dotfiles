@@ -110,18 +110,6 @@ alias zp='cd ~/workspace/zenpayroll'
 # Goes to root of whatever git repo you're in
 alias rt='cd $(git rev-parse --show-toplevel)'
 
-# Run 'prep' after you've fetched development of hi or zp
-# This will run all of the required commands in a row.
-prepare_dev()
-{
-    ( set -x
-    bundle install
-    yarn install
-    bundle exec rake db:migrate
-    bundle exec rake db:test:prepare )
-}
-alias prep=prepare_dev
-
 git_branch_cleanup()
 {
   defaultbranch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@');
@@ -129,7 +117,6 @@ git_branch_cleanup()
   git checkout $currbranch && git pull && git remote prune origin && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
 }
 alias gbrc=git_branch_cleanup
-alias aws-creds='gimme-aws-creds && source .aws/credentials && yes | rm .aws/credentials &> /dev/null && printf "Succcess, you have AWS credentials sourced in your environment! \n"'
 alias dev-dice="ruby ~/bin/dev_dice.rb"
 
 
