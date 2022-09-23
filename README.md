@@ -2,6 +2,7 @@
 
 * [Homebrew](https://brew.sh/)
 * [iTerm2](https://www.iterm2.com/)
+  * Set color scheme to Solarized Dark
 
 ## Setup (this will require some tuning)
 
