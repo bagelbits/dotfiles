@@ -20,6 +20,7 @@
   * Turn on Settings Sync
 * Drop files into ~ from here and reload terminal
   * You might need to setup p10k again
+* Generate a new NPM token and add it to your `.zshrc` file
 
 ## Optional Setup
 
