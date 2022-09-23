@@ -1,6 +1,7 @@
 # Requirements
 
 * [Homebrew](https://brew.sh/)
+* [iTerm2](https://www.iterm2.com/)
 
 ## Setup (this will require some tuning)
 
@@ -18,3 +19,13 @@
   * Turn on Settings Sync
 * Drop files into ~ from here and reload terminal
   * You might need to setup p10k again
+
+## Optional Setup
+
+* [Install Docker](https://docs.docker.com/docker-for-mac/install/)
+* [Install Postman](https://www.postman.com/downloads/)
+* [Install Slack](https://slack.com/intl/en-ca/downloads/mac)
+* [Install Spotify](https://www.spotify.com/ca-en/download/mac/)
+* [Install Heroku](https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
+* [Install pgAdmin](https://www.pgadmin.org/download/pgadmin-4-macos/)
+* [Install VLC](https://www.videolan.org/vlc/download-macosx.html)
