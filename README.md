@@ -1,7 +1,9 @@
 # Requirements
+
 * [Homebrew](https://brew.sh/)
 
-# Setup (this will require some tuning)
+## Setup (this will require some tuning)
+
 * [RunCat](https://apps.apple.com/us/app/runcat/id1429033973?mt=12)
 * `brew install iterm2`
   * switch colors to solarized dark
@@ -16,4 +18,3 @@
   * Turn on Settings Sync
 * Drop files into ~ from here and reload terminal
   * You might need to setup p10k again
-* `brew update && brew install --cask stretchly`
