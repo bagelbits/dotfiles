@@ -22,6 +22,7 @@
 
 ## Optional Setup
 
+* [Install Dropbox](https://www.dropbox.com/install)
 * [Install Docker](https://docs.docker.com/docker-for-mac/install/)
 * [Install Postman](https://www.postman.com/downloads/)
 * [Install Slack](https://slack.com/intl/en-ca/downloads/mac)
