@@ -1,6 +1,10 @@
 # Requirements
 
 * [Homebrew](https://brew.sh/)
+* `brew install gpg`
+* [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
+* [RVM](https://rvm.io/rvm/install)
+  * `gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys ${add keys here}`
 
 ## Setup (this will require some tuning)
 
