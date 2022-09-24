@@ -22,6 +22,7 @@
 * [RVM](https://rvm.io/rvm/install)
   * `brew install gpg`  
   * You'll probably need to try a [different key server](https://rvm.io/rvm/security#install-our-keys).
+* [pyenv](https://github.com/pyenv/pyenv#installation)
 * Generate a new NPM token and add it to your `.zshrc` file
 
 ## Optional Setup
