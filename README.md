@@ -1,10 +1,6 @@
 # Requirements
 
 * [Homebrew](https://brew.sh/)
-* `brew install gpg`
-* [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
-* [RVM](https://rvm.io/rvm/install)
-  * `gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys ${add keys here}`
 
 ## Setup (this will require some tuning)
 
@@ -22,6 +18,10 @@
   * Turn on Settings Sync
 * Drop files into ~ from here and reload terminal
   * You might need to setup p10k again
+* [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
+* [RVM](https://rvm.io/rvm/install)
+  * `brew install gpg`  
+  * `gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys ${add keys here}`
 * Generate a new NPM token and add it to your `.zshrc` file
 
 ## Optional Setup
