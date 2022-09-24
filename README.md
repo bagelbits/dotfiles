@@ -21,7 +21,7 @@
 * [NVM](https://github.com/nvm-sh/nvm#installing-and-updating)
 * [RVM](https://rvm.io/rvm/install)
   * `brew install gpg`  
-  * `gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys ${add keys here}`
+  * You'll probably need to try a [different key server](https://rvm.io/rvm/security#install-our-keys).
 * Generate a new NPM token and add it to your `.zshrc` file
 
 ## Optional Setup
