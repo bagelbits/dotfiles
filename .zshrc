@@ -117,7 +117,6 @@ alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # Shortcuts for jumping between workspaces
 alias mrt='cd ~/workspace'
-alias zp='cd ~/workspace/zenpayroll'
 
 # Goes to root of whatever git repo you're in
 alias rt='cd $(git rev-parse --show-toplevel)'
