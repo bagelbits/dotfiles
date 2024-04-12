@@ -24,6 +24,7 @@
   aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'
   amend = commit --amend
   nbr = "!f() { git checkout -b bagelbits.$1; }; f"
+  brc = "!f() { defaultbranch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'); currbranch=${1:-$defaultbranch}; git checkout $currbranch && git pull && git remote prune origin && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done; }; f"
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path =
