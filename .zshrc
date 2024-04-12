@@ -121,15 +121,6 @@ alias mrt='cd ~/workspace'
 # Goes to root of whatever git repo you're in
 alias rt='cd $(git rev-parse --show-toplevel)'
 
-git_branch_cleanup()
-{
-  defaultbranch=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@');
-  currbranch=${1:-$defaultbranch};
-  git checkout $currbranch && git pull && git remote prune origin && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
-}
-alias gbrc=git_branch_cleanup
-alias dev-dice="ruby ~/bin/dev_dice.rb"
-
 export NVM_COMPLETION=true
 export NVM_LAZY_LOAD=true
 
