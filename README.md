@@ -12,7 +12,7 @@
 * `sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"`
 * `bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"`
 * [Setup ssh](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and [add to github](https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
-* `brew tap homebrew/cask-fonts && brew install --cask font-fira-code`
+* `brew install --cask font-fira-code`
 * [Install vscode](https://code.visualstudio.com/docs?dv=osx)
   * [Setup command line](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
   * Turn on Settings Sync
