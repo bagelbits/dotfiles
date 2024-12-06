@@ -177,7 +177,7 @@ eval "$(pyenv virtualenv-init -)"
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
-export NPM_TOKEN=<ADD ME>
+# export NPM_TOKEN=<ADD ME>
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
