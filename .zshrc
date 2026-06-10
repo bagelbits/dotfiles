@@ -174,5 +174,9 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 # export NPM_TOKEN=<ADD ME>
 
+# peon-ping quick controls
+alias peon="bash /Users/bagelbits/.claude/hooks/peon-ping/peon.sh"
+[ -f /Users/bagelbits/.claude/hooks/peon-ping/completions.bash ] && source /Users/bagelbits/.claude/hooks/peon-ping/completions.bash
+
 # GitHub token for Claude Code github plugin MCP server (reuses gh CLI keyring login)
 export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
