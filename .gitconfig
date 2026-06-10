@@ -6,33 +6,51 @@
 [core]
   pager = less -FMRiX
   editor = code --wait
-  excludesfile = /Users/zardoz/.gitignore_global
+  autocrlf = input
 [push]
-	default = simple
+	default = current
+	autoSetupRemote = true
 [alias]
   dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%cr%C(reset)%C(auto)%d%C(reset)%n%s' --date-order
   cm = commit
   br = branch
   st = status
-  co = checkout
-  unstage = reset HEAD --
-  discard = checkout --
+  sw = switch
+  rs = restore
+  unstage = restore --staged
+  discard = restore --
   lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   last = log -1 HEAD
   alias = "!sh -c '[ $# = 2 ] && git config --global alias.\"$1\" \"$2\" && exit 0 || echo \"usage: git alias <new alias> <original command>\" >&2 && exit 1' -"
   aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /'
-  amend = commit --amend
+  fixup = commit --amend --no-edit
+  ss = stash
+  sp = stash pop
+  pushf = push --force-with-lease
+  gone = "!git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | awk '$2==\"[gone]\"{print $1}' | while read -r b; do git branch -D \"$b\"; done"
   nbr = "!f() { git checkout -b bagelbits.$1; }; f"
-  brc = "!f() { default=$(basename "$(git symbolic-ref refs/remotes/origin/HEAD)"); branch=${1:-$default}; git switch "$branch" && git pull && git remote prune origin && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | awk '$2==\"[gone]\"{print $1}' | while read -r b; do git branch -D "$b"; done; }; f"
+  brc = "!f() { default=$(basename "$(git symbolic-ref refs/remotes/origin/HEAD)"); branch=${1:-$default}; git switch "$branch" && git pull && git gone; }; f"
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path =
 [mergetool "sourcetree"]
   cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
   trustExitCode = true
+[fetch]
+  prune = true
 [remote "origin"]
   prune = true
 [credential]
 	helper = osxkeychain
 [pull]
-	rebase = false
+	rebase = merges
+[diff]
+	colorMoved = zebra
+	algorithm = histogram
+[merge]
+	conflictstyle = zdiff3
+[rebase]
+	autoStash = true
+	autoSquash = true
+[help]
+	autocorrect = prompt
