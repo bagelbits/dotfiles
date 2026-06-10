@@ -173,3 +173,6 @@ eval "$(pyenv virtualenv-init -)"
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 # export NPM_TOKEN=<ADD ME>
+
+# GitHub token for Claude Code github plugin MCP server (reuses gh CLI keyring login)
+export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
