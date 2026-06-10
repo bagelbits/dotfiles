@@ -6,6 +6,7 @@ tap "heroku/brew"
 tap "peonping/tap"
 
 # Shell & terminal
+brew "chezmoi"
 brew "zsh"
 cask "wezterm"
 cask "font-fira-code"
