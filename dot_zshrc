@@ -200,3 +200,6 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
 
 # Machine-local config and secrets, kept out of the dotfiles repo
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
