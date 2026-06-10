@@ -54,3 +54,7 @@
 	autoSquash = true
 [help]
 	autocorrect = prompt
+[init]
+	defaultBranch = main
+[rerere]
+	enabled = true
