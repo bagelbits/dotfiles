@@ -17,8 +17,6 @@ brew "pyenv"
 brew "pyenv-virtualenv"
 brew "docker"
 brew "heroku"
-brew "pnpm@10", link: true
-brew "postgresql@16"
 brew "markdownlint-cli"
 
 # Claude Code
@@ -30,7 +28,6 @@ cask "dropbox"
 cask "slack"
 cask "spotify"
 cask "vlc"
-cask "pgadmin4"
 cask "gimp"
 
 # Mac App Store
