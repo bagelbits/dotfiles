@@ -5,9 +5,10 @@
 ## Setup (this will require some tuning)
 
 * [RunCat](https://apps.apple.com/us/app/runcat/id1429033973?mt=12)
-* `brew install --cask ghostty`
-  * switch colors to solarized dark
-  * [Background behind Ghostty](https://i.imgur.com/wimz70n.jpg)
+* `brew install --cask wezterm`
+  * config lives in [.config/wezterm/wezterm.lua](.config/wezterm/wezterm.lua) (Solarized Dark, Fira Code, transparency + blur)
+  * copy it to `~/.config/wezterm/wezterm.lua`
+  * [Background behind WezTerm](https://i.imgur.com/wimz70n.jpg)
 * `brew install zsh`
 * `sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"`
 * `bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"`
