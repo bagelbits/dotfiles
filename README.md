@@ -26,6 +26,12 @@
   * [virtualenv](https://github.com/pyenv/pyenv-virtualenv)
 * Generate a new NPM token and add it to your `.zshrc` file
 
+## Claude Code Setup
+
+* Install [peon-ping](https://www.peonping.com/) for audio notifications
+  * `brew install PeonPing/tap/peon-ping`
+  * `peon packs use dreamy-minimal`
+
 ## Optional Setup
 
 * [Install Dropbox](https://www.dropbox.com/install)
