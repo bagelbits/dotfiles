@@ -98,6 +98,7 @@ fi
 # --- peon-ping --------------------------------------------------------------
 if command -v peon >/dev/null 2>&1; then
   info "Setting peon-ping pack"
+  peon packs install dreamy-minimal
   peon packs use dreamy-minimal
 fi
 
