@@ -102,6 +102,38 @@ if command -v peon >/dev/null 2>&1; then
   peon packs use dreamy-minimal
 fi
 
+# --- Claude Code plugins ----------------------------------------------------
+# Local skills live in the dotfiles (~/.claude/skills, ~/.codex/skills) and are
+# applied by chezmoi. Plugins come from marketplaces, so they're (re)installed
+# here instead. Idempotent: each step skips itself if already present.
+if command -v claude >/dev/null 2>&1; then
+  info "Installing Claude Code plugins"
+
+  existing_markets="$(claude plugin marketplace list 2>/dev/null || true)"
+  if grep -q claude-plugins-official <<<"$existing_markets"; then
+    info "  marketplace claude-plugins-official already added"
+  else
+    info "  adding marketplace claude-plugins-official"
+    claude plugin marketplace add anthropics/claude-plugins-official \
+      || warn "  failed to add marketplace claude-plugins-official"
+  fi
+
+  installed_plugins="$(claude plugin list 2>/dev/null || true)"
+  for plugin in \
+    superpowers@claude-plugins-official \
+    code-simplifier@claude-plugins-official \
+    github@claude-plugins-official; do
+    if grep -q "$plugin" <<<"$installed_plugins"; then
+      info "  $plugin already installed"
+    else
+      info "  installing $plugin"
+      claude plugin install "$plugin" || warn "  failed to install $plugin"
+    fi
+  done
+else
+  warn "Claude Code (claude) not found — skipping plugins. Install Claude Code, then re-run."
+fi
+
 # --- Done -------------------------------------------------------------------
 cat <<'EOF'
 
