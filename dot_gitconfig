@@ -27,9 +27,9 @@
   ss = stash
   sp = stash pop
   pushf = push --force-with-lease
-  gone = "!git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | awk '$2==\"[gone]\"{print $1}' | while read -r b; do git branch -D \"$b\"; done"
+	gone = "!default=$(basename $(git symbolic-ref refs/remotes/origin/HEAD)); git for-each-ref --format=\"%(refname:short) %(upstream:track)\" refs/heads | while read -r b track; do [ \"$b\" = \"$default\" ] && continue; gone=0; if [ \"$track\" = \"[gone]\" ]; then gone=1; else case \"$b\" in bagelbits/*|claude/*|apex/*) git show-ref --verify --quiet \"refs/remotes/origin/$b\" || gone=1;; esac; fi; [ \"$gone\" = \"1\" ] || continue; wt=$(git worktree list --porcelain | awk -v br=\"refs/heads/$b\" \"\\$1==\\\"worktree\\\"{p=\\$2} \\$1==\\\"branch\\\" && \\$2==br{print p}\"); if [ -n \"$wt\" ]; then git worktree remove \"$wt\" || { echo \"gone: skipping worktree removal for $wt (has local changes) -- remove manually or with --force\" >&2; continue; }; fi; git branch -d \"$b\" || echo \"gone: $b not fully merged -- keeping (git branch -D $b to force)\" >&2; done; git worktree prune"
   nbr = "!f() { git checkout -b bagelbits.$1; }; f"
-  brc = "!f() { default=$(basename "$(git symbolic-ref refs/remotes/origin/HEAD)"); branch=${1:-$default}; git switch "$branch" && git pull && git gone; }; f"
+	brc = "!f() { default=$(basename $(git symbolic-ref refs/remotes/origin/HEAD)); branch=${1:-$default}; current=$(git branch --show-current); if [ \"$branch\" != \"$current\" ]; then wt=$(git worktree list --porcelain | awk -v b=\"refs/heads/$branch\" \"\\$1==\\\"worktree\\\"{p=\\$2} \\$1==\\\"branch\\\" && \\$2==b{print p}\"); fi; if [ -n \"$wt\" ]; then (unset GIT_DIR GIT_WORK_TREE; cd \"$wt\" && git pull); else git switch \"$branch\" && git pull; fi; git gone; }; f"
 [difftool "sourcetree"]
   cmd = opendiff \"$LOCAL\" \"$REMOTE\"
   path =
