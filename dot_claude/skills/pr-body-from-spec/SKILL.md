@@ -124,6 +124,10 @@ Follow-up to create separately: `<precise deferred work>`.
 ## Was any impacted documentation updated to reflect this change?
 
 <yes/no and what changed>
+
+## Here's a fun image for your troubles
+
+<!-- human inserts silly image here -->
 ````
 
 ## Review Checklist
