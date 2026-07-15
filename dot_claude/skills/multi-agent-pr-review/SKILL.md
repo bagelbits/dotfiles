@@ -20,8 +20,9 @@ A skill in three movements: (1) dispatch four independent reviewers (architect,
 staff engineer, devil's advocate, security auditor) as a named **team** on a
 GitHub PR for big-picture findings; (2) kick off an independent **verifier**
 that fact-checks the panel's findings against the diff and challenges weak ones
-back to their author; (3) consolidate, then support drill-down questions
-("where can we do that?") with concrete file/line locations and proposed fixes.
+back to their author; (3) consolidate — every finding carrying a clickable
+GitHub line link to the exact code — then support drill-down questions ("where
+can we do that?") with the same linked locations and proposed fixes.
 
 This skill assumes agent teams are enabled
 (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`), so panelists are spawned as
@@ -54,7 +55,7 @@ predictable. Use `/tmp/pr-<NUMBER>/` as a working directory.
 ```bash
 mkdir -p /tmp/pr-<NUMBER>/panel
 gh pr view <NUMBER> --repo <OWNER/REPO> --json \
-  title,body,author,state,additions,deletions,changedFiles,baseRefName,headRefName,commits,files \
+  title,body,author,state,additions,deletions,changedFiles,baseRefName,headRefName,headRefOid,commits,files \
   > /tmp/pr-<NUMBER>/meta.json
 gh pr diff <NUMBER> --repo <OWNER/REPO> > /tmp/pr-<NUMBER>/diff.patch
 ```
@@ -64,10 +65,37 @@ Read `meta.json` yourself to extract:
 - PR title and body (the "why")
 - File list with line counts (so each persona knows where to focus)
 - Linked tickets / tech proposals mentioned in the description
+- **`headRefOid`** — the PR head commit SHA. This is the anchor for every
+  line link (below). Grab it now.
 
 You'll feed those into each persona's prompt as **Context**. Don't make the
 subagents re-derive context from raw JSON; that wastes tokens and produces
 inconsistent framing across the reports.
+
+### Step 1b. Line-link convention — cite a source line, link to the PR
+
+Every finding must be **clickable**: the location resolves to the exact line(s)
+in the PR on GitHub. Use the blob-at-head-SHA form — stable, always resolves,
+no diff-anchor hash to compute:
+
+```
+https://github.com/<OWNER/REPO>/blob/<headRefOid>/<path>#L<startLine>          (single line)
+https://github.com/<OWNER/REPO>/blob/<headRefOid>/<path>#L<startLine>-L<endLine>  (range)
+```
+
+e.g. `https://github.com/acme/backend/blob/b6722e3d/apps/identity-service/libs/services/src/users/users.service.ts#L820-L827`.
+
+The trap: `diff.patch` line numbers are **diff-file offsets**, not source line
+numbers — linking to them points at the wrong place. The real source line is
+the **new-file line number**, read from the nearest preceding hunk header
+`@@ -old,n +NEW,m @@`: start counting from `NEW` at the first line after the
+header, +1 per context/added (` `/`+`) line, skipping removed (`-`) lines.
+Panelists cite `path:sourceLine`; the **verifier** pins the canonical source
+line; **you** (consolidation, Phase 3) render the markdown link. When a line is
+uncertain, `grep -n` the symbol in a local checkout at `headRefOid` to confirm
+before linking. Save the link base to `/tmp/pr-<NUMBER>/linkbase.txt`
+(`https://github.com/<OWNER/REPO>/blob/<headRefOid>`) so Phase 3/4 don't
+re-derive it.
 
 ### Step 2. Dispatch the four reviewers as a named team, in a single message
 
@@ -98,6 +126,11 @@ Each prompt must:
    just a diagnosis. A finding without a proposed fix is incomplete; the
    reviewer should say "no fix obvious, needs discussion" rather than omit
    the field.
+   - **The location must be `path:sourceLine` (or `path:startLine-endLine`)**
+     using the **new-file source line number** from the nearest `@@` hunk
+     header — NOT the raw line number in `diff.patch`. See Step 1b. This is
+     what makes the consolidated report's line links resolve to the right
+     place; a wrong line here becomes a wrong link.
 7. Forbid nitpicks (style, naming, formatting, micro-refactors).
 8. **Write the final report to `/tmp/pr-<NUMBER>/panel/<role>.md`** (e.g.
    `architect.md`) as its last action, then return the same text. The verifier
@@ -118,7 +151,9 @@ recommend a fix or explicitly say "needs design discussion" when they can't.
 Persona prompt scaffolds follow. Adjust **Context** and file list per PR; keep
 the structural directives (output format, word budget, no-nits rule) intact.
 Append directive 8 to each scaffold's closing line: "Write this report to
-`/tmp/pr-<N>/panel/<role>.md` before returning."
+`/tmp/pr-<N>/panel/<role>.md` before returning." Also append the citation rule
+to each scaffold: "Cite every location as `path:sourceLine` using the new-file
+line number from the `@@` hunk header — not the diff-file line number."
 
 #### Architect prompt
 
@@ -303,11 +338,18 @@ For EVERY numbered finding across all four reports:
      ("handle the race") or wouldn't actually work.
 3. Give one line of evidence per verdict (the diff line you checked + what you
    found there).
+4. Pin the **canonical source location** for each finding: `path:startLine`
+   (or `path:startLine-endLine`) using the NEW-file line number from the
+   nearest `@@ -old,n +NEW,m @@` hunk header — NOT the raw `diff.patch` line
+   number. The consolidator turns this into a GitHub line link, so an accurate
+   line here is the difference between a link that lands on the code and one
+   that doesn't. If a finding's cited line is off, correct it in this column.
 
-Output a single table: Reviewer · Finding (short) · Verdict · Evidence. Then
-one line listing which findings MUST be dropped (UNSUPPORTED) or downgraded
-(OVERSTATED / NIT / FIX-WEAK) before this report goes to the user. Add nothing
-else — no new findings, no restating the diff.
+Output a single table: Reviewer · Finding (short) · Verdict · Evidence ·
+Source location (`path:line`). Then one line listing which findings MUST be
+dropped (UNSUPPORTED) or downgraded (OVERSTATED / NIT / FIX-WEAK) before this
+report goes to the user. Add nothing else — no new findings, no restating the
+diff.
 ```
 
 ### Step 4. Challenge weak findings back to their author
@@ -332,21 +374,34 @@ verifier's verdict as final: drop UNSUPPORTED, downgrade the rest.
 When the panel, verifier, and any challenge rounds are settled, synthesize —
 don't just paste the four blocks. Carry each finding's recommended fix inline
 (verbatim or refined), and annotate it with the verifier's verdict; drop the
-findings the verifier killed. Layout:
+findings the verifier killed.
+
+**Render every location as a clickable GitHub line link** using the verifier's
+pinned source location and the link base from `/tmp/pr-<N>/linkbase.txt` (Step
+1b). Format the citation as a markdown link:
+`[\`path:line\`](https://github.com/<OWNER/REPO>/blob/<headRefOid>/<path>#L<line>)`
+(use `#L<start>-L<end>` for a range). Do this for the reviewer sections, the
+Suggestions digest location column, and any location named in the consensus
+paragraph — the whole point of this pass is that the user clicks straight to
+the code. If the verifier couldn't pin a line (e.g. the claim is about absent
+code or a foreign file not in the diff), link to the file and say so rather
+than inventing a line. Layout:
 
 ```
 ## 🏛️ Architect — strategic shape
-<surviving numbered findings, each tagged [verified]/[overstated] and ending
- with "**Fix:** ...">
+<surviving numbered findings, each tagged [verified]/[overstated], carrying a
+ linked location `[`path:line`](blob-url#Lline)`, and ending with "**Fix:** ...">
 
 ## 🛠️ Staff Engineer — operational risk
-<surviving numbered findings, each tagged and ending with "**Fix:** ...">
+<surviving numbered findings, each tagged, linked location, ending with "**Fix:** ...">
 
 ## 😈 Devil's Advocate — challenge the premise
-<surviving numbered objections, each tagged and ending with "**Alternative:** ...">
+<surviving numbered objections, each tagged, linked location where one applies,
+ ending with "**Alternative:** ...">
 
 ## 🔒 Security Auditor — exploitable risk
-<surviving numbered findings, each led by severity, tagged, ending with "**Fix:** ...">
+<surviving numbered findings, each led by severity, tagged, linked location,
+ ending with "**Fix:** ...">
 
 ## 🎯 Cross-cutting consensus
 <which findings did 2+ agents converge on? what's the single decision to
@@ -360,9 +415,9 @@ just what it got right.>
 
 ## 📋 Suggestions digest
 <flat table of every surviving fix, grouped by reviewer, so the user can
-scan/act without re-reading the narrative. Columns: Finding · Recommended
-fix. Include must-fix-before-merge and follow-up items separately if the
-staff engineer flagged them.>
+scan/act without re-reading the narrative. Columns: Finding · Location (linked
+`path:line`) · Recommended fix. Include must-fix-before-merge and follow-up
+items separately if the staff engineer flagged them.>
 ```
 
 Both the consensus and the digest are the highest-value part of the output:
@@ -381,9 +436,11 @@ trust the on-disk reports):
    names, error strings, or filenames in the finding.
 2. **Read context** — `Read /tmp/pr-<N>/diff.patch` with the offset around
    the match (±30 lines) to see the surrounding code.
-3. **Cite precisely** — give the user file path + diff-line number ("…in
-   `pages/mobile-auth/index.tsx`, diff lines ~420-430") so they can navigate
-   the PR directly.
+3. **Cite precisely, as a link** — give the user a clickable GitHub line link
+   using the link base from `/tmp/pr-<N>/linkbase.txt` and the source line:
+   `[\`pages/mobile-auth/index.tsx:420-430\`](https://github.com/<OWNER/REPO>/blob/<headRefOid>/pages/mobile-auth/index.tsx#L420-L430)`.
+   Derive the source line from the `@@` hunk header (Step 1b), not the diff-file
+   offset — the link must land on the actual code.
 4. **Propose a concrete change** — show the current snippet and a recommended
    replacement. Respect repo conventions (logger, error-handling rules,
    lint config) you find in `CLAUDE.md` or `.claude/rules/`.
@@ -406,8 +463,9 @@ trust the on-disk reports):
 > prompts. Page listener writes to `queuedMessageRef` and Body's
 > `useEffect(...,[])` reads `initialMessage` once on mount — anything posted
 > before the listener attaches is dropped with no Sentry breadcrumb. The
-> marquee feature's window is racy. File: `pages/chat-widget/index.tsx`
-> lines 154-163. **Fix:** make the page the single bridge owner — expose
+> marquee feature's window is racy.
+> [`pages/chat-widget/index.tsx:154-163`](https://github.com/acme/app/blob/<headRefOid>/pages/chat-widget/index.tsx#L154-L163).
+> **Fix:** make the page the single bridge owner — expose
 > `sendMessage` on `ChatWidgetMobile` via an `onReady` callback, queue
 > messages in the page until `onReady` fires, dedup by a native-provided
 > `messageId`. Drop the listener inside `ChatWidgetMobileBody`."
@@ -449,15 +507,17 @@ Before reporting completion of the review:
 - [ ] The consensus paragraph names a concrete decision to force (e.g. "name
       an owner for the bridge contract and extract it to a typed package"),
       not an abstract concern.
-- [ ] Findings cite file paths (and diff-line numbers when claiming a bug).
+- [ ] Every surviving finding's location is a **clickable GitHub line link**
+      (blob-at-`headRefOid` form, source line from the `@@` hunk header — not a
+      raw `diff.patch` offset), in the reviewer sections and the digest.
 - [ ] No agent's output is pure style nitpicks — if one drifted, redirect or
       drop it from the consolidation rather than pasting noise.
 
 For Phase 4 drill-downs:
 
 - [ ] You read the saved diff before claiming a location.
-- [ ] You cited file path + diff-line range, not just "somewhere in the auth
-      flow".
+- [ ] You cited the location as a clickable GitHub line link (source line, not
+      a diff-file offset), not just "somewhere in the auth flow".
 - [ ] Proposed code respects repo conventions (logger usage, error handling
       rules, lint).
 - [ ] You offered a concrete next action (follow-up PR / review comments) but
@@ -487,6 +547,10 @@ For Phase 4 drill-downs:
   uncited.
 - **Drilling down by re-dispatching.** Phase 4 doesn't need new agents — the
   diff is on disk and you have the finding text.
+- **Linking to `diff.patch` line numbers.** The raw line number in the saved
+  diff is a diff-file offset, not the source line — a link built from it lands
+  on the wrong code. Always derive the new-file source line from the `@@` hunk
+  header (Step 1b) and anchor the link to `headRefOid`.
 - **Findings without fixes.** "Consider improving error handling" and "handle
   the race" are not fixes. If an agent returns a bare finding, attach the
   fix yourself from the diff, or mark it "needs design discussion" with the
