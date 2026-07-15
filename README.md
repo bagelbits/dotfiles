@@ -14,7 +14,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/bagelbits/dotfiles/main/
 
 The script is idempotent — re-run it any time. It prints the few steps that stay manual:
 
-* Sign into the App Store (RunCat comes via `mas`), then re-run if it failed
+* Sign into the App Store (RunCat Neo comes via `mas`), then re-run if it failed
 * Add the generated SSH key to [GitHub](https://github.com/settings/ssh/new) (the script copies it to your clipboard)
 * WezTerm config is applied by chezmoi (Solarized Dark, Fira Code, transparency + blur); [background image](https://i.imgur.com/wimz70n.jpg)
 * VSCode

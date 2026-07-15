@@ -45,7 +45,7 @@ fi
 # --- Brewfile ---------------------------------------------------------------
 info "Installing Brewfile (CLI tools, apps, fonts, App Store apps)"
 if ! brew bundle --file "$CHEZMOI_DIR/Brewfile"; then
-  warn "brew bundle had failures — mas apps (RunCat) need you to be signed into the App Store. Re-run after signing in."
+  warn "brew bundle had failures — mas apps (RunCat Neo) need you to be signed into the App Store. Re-run after signing in."
 fi
 
 # --- oh-my-zsh --------------------------------------------------------------
@@ -139,7 +139,7 @@ cat <<'EOF'
 
 Done! A few things still need a human:
 
-  * Sign into the App Store, then re-run this script if RunCat didn't install
+  * Sign into the App Store, then re-run this script if RunCat Neo didn't install
   * Add the SSH key (already on your clipboard) to GitHub: https://github.com/settings/ssh/new
   * VSCode: install the 'code' command (Cmd+Shift+P -> "Shell Command") and turn on Settings Sync
   * WezTerm background image: https://i.imgur.com/wimz70n.jpg

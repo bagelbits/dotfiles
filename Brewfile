@@ -33,4 +33,4 @@ cask "gimp"
 
 # Mac App Store
 brew "mas"
-mas "RunCat", id: 1_429_033_973
+mas "RunCat Neo", id: 6_757_801_838
