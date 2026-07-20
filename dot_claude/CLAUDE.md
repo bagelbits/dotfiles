@@ -1,0 +1,5 @@
+# Instructions for Claude
+
+## Code comments
+
+Keep comments short and succinct. Before writing one, ask whether it's necessary at all — prefer clear code over comments; only comment the non-obvious *why*, never the *what*. Delete redundant, obvious, or narrating comments.
