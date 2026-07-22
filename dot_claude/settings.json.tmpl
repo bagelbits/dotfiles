@@ -156,6 +156,41 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/pre-pr-comment-check.mjs",
+            "if": "Bash(gh pr create*)",
+            "timeout": 20,
+            "statusMessage": "Checking diff for redundant comments…"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/pre-pr-comment-check.mjs",
+            "if": "Bash(git commit*)",
+            "timeout": 20,
+            "statusMessage": "Checking diff for redundant comments…"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_github_github__create_pull_request",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/pre-pr-comment-check.mjs",
+            "timeout": 20,
+            "statusMessage": "Checking diff for redundant comments…"
+          }
+        ]
       }
     ]
   },
