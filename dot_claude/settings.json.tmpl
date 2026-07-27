@@ -1,5 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -48,6 +52,16 @@
             "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
             "timeout": 10,
             "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'COMMENT RULE (global CLAUDE.md): comment the non-obvious *why*, never the *what*. Prefer clear code over a comment; delete redundant/narrating ones. Use /** ... */ for multiline. A PreToolUse hook blocks writes that add obvious violations.'",
+            "timeout": 5
           }
         ]
       },
@@ -158,6 +172,17 @@
         ]
       },
       {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/comment-filter.mjs",
+            "timeout": 10,
+            "statusMessage": "Checking comments…"
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
@@ -195,30 +220,28 @@
     ]
   },
   "worktree": {
-    "symlinkDirectories": [".turbo/cache"]
+    "symlinkDirectories": [
+      ".turbo/cache"
+    ]
   },
-  "enabledPlugins": {
-    "coderabbit@claude-plugins-official": true,
-    "pr-review-cycle@internal-marketplace": true,
-    "writing-linear-tasks@internal-marketplace": true,
-    "superpowers@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
-    "linear-project-updates@internal-marketplace": true,
-    "apex@internal-marketplace": true
-  },
-  "extraKnownMarketplaces": {
-    "internal-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "acme/claude-marketplace"
-      },
-      "autoUpdate": true
-    }
-  },
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
+  {{- /* Work plugins and marketplaces come from [data.work] in the machine-local
+         chezmoi.toml, which lives outside this repo. Absent → public config only. */}}
+  "enabledPlugins": {{ merge (dict
+    "superpowers@claude-plugins-official" true
+    "code-simplifier@claude-plugins-official" true
+    "github@claude-plugins-official" true
+    "frontend-design@claude-plugins-official" true
+    "skill-creator@claude-plugins-official" true
+    "claude-md-management@claude-plugins-official" true
+    "security-guidance@claude-plugins-official" true
+    "playwright@claude-plugins-official" true
+    "typescript-lsp@claude-plugins-official" true
+    "figma@claude-plugins-official" true
+    "code-review@claude-plugins-official" true
+  ) (dig "work" "plugins" dict .) | toPrettyJson | indent 2 | trim }},
+  "extraKnownMarketplaces": {{ dig "work" "marketplaces" dict . | toPrettyJson | indent 2 | trim }},
+  "effortLevel": "high",
+  "advisorModel": "fable",
   "voice": {
     "enabled": true,
     "mode": "hold"
@@ -226,6 +249,5 @@
   "voiceEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754079234298
-  },
-  "model": "opus[1m]"
+  }
 }
