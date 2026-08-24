@@ -60,16 +60,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'COMMENT RULE (global CLAUDE.md): comment the non-obvious *why*, never the *what*. Prefer clear code over a comment; delete redundant/narrating ones. Use /** ... */ for multiline. A PreToolUse hook blocks writes that add obvious violations.'",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
             "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/scripts/hook-handle-use.sh",
             "timeout": 5
           },
@@ -168,52 +158,6 @@
             "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
             "timeout": 10,
             "async": true
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/comment-filter.mjs",
-            "timeout": 10,
-            "statusMessage": "Checking comments…"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/pre-pr-comment-check.mjs",
-            "if": "Bash(gh pr create*)",
-            "timeout": 20,
-            "statusMessage": "Checking diff for redundant comments…"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/pre-pr-comment-check.mjs",
-            "if": "Bash(git commit*)",
-            "timeout": 20,
-            "statusMessage": "Checking diff for redundant comments…"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__plugin_github_github__create_pull_request",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/pre-pr-comment-check.mjs",
-            "timeout": 20,
-            "statusMessage": "Checking diff for redundant comments…"
           }
         ]
       }
