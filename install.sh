@@ -95,13 +95,6 @@ else
   info "RVM already installed"
 fi
 
-# --- peon-ping --------------------------------------------------------------
-if command -v peon >/dev/null 2>&1; then
-  info "Setting peon-ping pack"
-  peon packs install dreamy-minimal
-  peon packs use dreamy-minimal
-fi
-
 # --- Claude Code plugins ----------------------------------------------------
 # Local skills live in the dotfiles (~/.claude/skills, ~/.codex/skills) and are
 # applied by chezmoi. Plugins come from marketplaces, so they're (re)installed

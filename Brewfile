@@ -3,7 +3,6 @@
 cask_args adopt: true
 
 tap "heroku/brew"
-tap "peonping/tap"
 
 # Shell & terminal
 brew "chezmoi"
@@ -19,9 +18,6 @@ brew "pyenv-virtualenv"
 brew "docker"
 brew "heroku"
 brew "markdownlint-cli"
-
-# Claude Code
-brew "peonping/tap/peon-ping"
 
 # Apps
 cask "visual-studio-code"

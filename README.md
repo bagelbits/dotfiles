@@ -6,7 +6,7 @@
 
 These dotfiles are managed with [chezmoi](https://www.chezmoi.io/). The repo lives at `~/.local/share/chezmoi`.
 
-One command does it all (Homebrew, chezmoi + dotfiles, Brewfile, oh-my-zsh, zinit, SSH key, RVM, peon-ping):
+One command does it all (Homebrew, chezmoi + dotfiles, Brewfile, oh-my-zsh, zinit, SSH key, RVM):
 
 ```sh
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/bagelbits/dotfiles/main/install.sh)"
