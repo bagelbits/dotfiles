@@ -191,9 +191,6 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# peon-ping quick controls
-alias peon="bash $HOME/.claude/hooks/peon-ping/peon.sh"
-[ -f "$HOME/.claude/hooks/peon-ping/completions.bash" ] && source "$HOME/.claude/hooks/peon-ping/completions.bash"
 
 # GitHub token for Claude Code github plugin MCP server (reuses gh CLI keyring login)
 export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"

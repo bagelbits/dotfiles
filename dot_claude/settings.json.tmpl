@@ -1,168 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "COMMENT_HAT_OFF": "1"
   },
   "model": "opus[1m]",
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "SubagentStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/scripts/hook-handle-use.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/scripts/hook-handle-rename.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/peon-ping/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
-      }
-    ]
-  },
   "worktree": {
     "symlinkDirectories": [
       ".turbo/cache"
@@ -182,8 +24,12 @@
     "typescript-lsp@claude-plugins-official" true
     "figma@claude-plugins-official" true
     "code-review@claude-plugins-official" true
+    "comment-reaper@claude-skills" true
+    "comment-in-the-hat@claude-skills" true
   ) (dig "work" "plugins" dict .) | toPrettyJson | indent 2 | trim }},
-  "extraKnownMarketplaces": {{ dig "work" "marketplaces" dict . | toPrettyJson | indent 2 | trim }},
+  "extraKnownMarketplaces": {{ merge (dict
+    "claude-skills" (dict "source" (dict "source" "github" "repo" "bagelbits/claude-skills"))
+  ) (dig "work" "marketplaces" dict .) | toPrettyJson | indent 2 | trim }},
   "effortLevel": "high",
   "advisorModel": "fable",
   "voice": {
