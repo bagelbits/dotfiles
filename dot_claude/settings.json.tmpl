@@ -26,9 +26,11 @@
     "code-review@claude-plugins-official" true
     "comment-reaper@claude-skills" true
     "comment-in-the-hat@claude-skills" true
+    "gsd-core@gsd-core" true
   ) (dig "work" "plugins" dict .) | toPrettyJson | indent 2 | trim }},
   "extraKnownMarketplaces": {{ merge (dict
     "claude-skills" (dict "source" (dict "source" "github" "repo" "bagelbits/claude-skills"))
+    "gsd-core" (dict "source" (dict "source" "github" "repo" "open-gsd/gsd-core"))
   ) (dig "work" "marketplaces" dict .) | toPrettyJson | indent 2 | trim }},
   "effortLevel": "high",
   "advisorModel": "fable",
