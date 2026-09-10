@@ -27,10 +27,12 @@
     "comment-reaper@claude-skills" true
     "comment-in-the-hat@claude-skills" true
     "gsd-core@gsd-core" true
+    "ponytail@ponytail" true
   ) (dig "work" "plugins" dict .) | toPrettyJson | indent 2 | trim }},
   "extraKnownMarketplaces": {{ merge (dict
     "claude-skills" (dict "source" (dict "source" "github" "repo" "bagelbits/claude-skills"))
     "gsd-core" (dict "source" (dict "source" "github" "repo" "open-gsd/gsd-core"))
+    "ponytail" (dict "source" (dict "source" "github" "repo" "DietrichGebert/ponytail"))
   ) (dig "work" "marketplaces" dict .) | toPrettyJson | indent 2 | trim }},
   "effortLevel": "high",
   "advisorModel": "fable",
