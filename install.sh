@@ -127,6 +127,27 @@ else
   warn "Claude Code (claude) not found — skipping plugins. Install Claude Code, then re-run."
 fi
 
+# --- Claude Code skills (skills.sh) -----------------------------------------
+# Caveman ships as a skills.sh package, not a marketplace plugin: it installs
+# into ~/.agents/skills and symlinks itself into ~/.claude/skills. Those
+# symlinks sit alongside the chezmoi-managed skills without colliding, since
+# chezmoi leaves unmanaged entries alone.
+#
+# npx may be missing here on a fresh machine — node arrives via nvm, which
+# zinit installs lazily on the first interactive shell, i.e. after this script.
+if command -v npx >/dev/null 2>&1; then
+  info "Installing Claude Code skills"
+
+  if [ -d "$HOME/.agents/skills/caveman" ]; then
+    info "  caveman already installed"
+  else
+    info "  installing caveman"
+    npx --yes skills add JuliusBrussee/caveman || warn "  failed to install caveman"
+  fi
+else
+  warn "npx not found — skipping caveman skill. Open a new terminal so nvm installs, then re-run."
+fi
+
 # --- Done -------------------------------------------------------------------
 cat <<'EOF'
 
