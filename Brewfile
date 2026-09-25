@@ -2,8 +2,6 @@
 # Casks adopt pre-existing apps that were installed manually before brew managed them.
 cask_args adopt: true
 
-tap "heroku/brew"
-
 # Shell & terminal
 brew "chezmoi"
 brew "zsh"
@@ -15,9 +13,15 @@ brew "gh"
 brew "gnupg" # needed for RVM key verification
 brew "pyenv"
 brew "pyenv-virtualenv"
+brew "rbenv"
 brew "docker"
 brew "heroku"
 brew "markdownlint-cli"
+
+# Databases
+brew "mysql-client"
+brew "postgresql@14"
+brew "redis"
 
 # Apps
 cask "visual-studio-code"
@@ -26,7 +30,10 @@ cask "slack"
 cask "spotify"
 cask "vlc"
 cask "gimp"
+cask "granola"
 
 # Mac App Store
 brew "mas"
 mas "RunCat Neo", id: 6_757_801_838
+mas "Paprika Recipe Manager 3", id: 1_303_222_628
+mas "WireGuard", id: 1_451_685_025
