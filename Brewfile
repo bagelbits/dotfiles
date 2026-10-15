@@ -17,6 +17,7 @@ brew "rbenv"
 brew "docker"
 brew "heroku"
 brew "markdownlint-cli"
+cask "claude-code" # provides `claude`, needed by the plugin step in install.sh
 
 # Databases
 brew "mysql-client"
@@ -31,6 +32,7 @@ cask "spotify"
 cask "vlc"
 cask "gimp"
 cask "granola"
+cask "claude"
 
 # Mac App Store
 brew "mas"
