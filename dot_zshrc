@@ -5,6 +5,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+setopt AUTO_CD
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
 # Personal aliases
 alias zshconfig="mate ~/.zshrc"
 
