@@ -44,4 +44,7 @@
   "feedbackSurveyState": {
     "lastShownTime": 1754079234298
   }
+  {{- with (dig "claude" "autoMode" nil .) }},
+  "autoMode": {{ . | toPrettyJson | indent 2 | trim }}
+  {{- end }}
 }
