@@ -50,8 +50,7 @@ fi
 
 # --- zinit ------------------------------------------------------------------
 # Cloned directly instead of via the zinit installer so it can't touch .zshrc,
-# which already contains the loader. NVM is handled by zinit (zsh-nvm installs
-# it lazily on first shell), so there's no nvm step here.
+# which already contains the loader.
 if [ ! -d "$ZINIT_HOME" ]; then
   info "Installing zinit"
   mkdir -p "$(dirname "$ZINIT_HOME")"
@@ -75,16 +74,10 @@ else
   info "SSH key already exists"
 fi
 
-# --- RVM --------------------------------------------------------------------
-if [ ! -d "$HOME/.rvm" ]; then
-  info "Installing RVM"
-  # Import keys straight from rvm.io; keyservers are flaky (see rvm.io/rvm/security)
-  curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-  curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
-  curl -sSL https://get.rvm.io | bash -s stable || warn "RVM install failed — see https://rvm.io/rvm/install"
-else
-  info "RVM already installed"
-fi
+# --- mise -------------------------------------------------------------------
+info "Installing language runtimes (mise)"
+mise install || warn "mise install had failures — re-run \`mise install\` after fixing them"
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # --- Claude Code plugins ----------------------------------------------------
 # Local skills live in the dotfiles (~/.claude/skills, ~/.codex/skills) and are
@@ -123,9 +116,6 @@ fi
 # into ~/.agents/skills and symlinks itself into ~/.claude/skills. Those
 # symlinks sit alongside the chezmoi-managed skills without colliding, since
 # chezmoi leaves unmanaged entries alone.
-#
-# npx may be missing here on a fresh machine — node arrives via nvm, which
-# zinit installs lazily on the first interactive shell, i.e. after this script.
 if command -v npx >/dev/null 2>&1; then
   info "Installing Claude Code skills"
 
@@ -136,7 +126,7 @@ if command -v npx >/dev/null 2>&1; then
     npx --yes skills add JuliusBrussee/caveman || warn "  failed to install caveman"
   fi
 else
-  warn "npx not found — skipping caveman skill. Open a new terminal so nvm installs, then re-run."
+  warn "npx not found — skipping caveman skill. Run \`mise install\`, then re-run."
 fi
 
 # --- Done -------------------------------------------------------------------
@@ -149,5 +139,5 @@ Done! A few things still need a human:
   * VSCode: install the 'code' command (Cmd+Shift+P -> "Shell Command") and turn on Settings Sync
   * WezTerm background image: https://i.imgur.com/wimz70n.jpg
   * Run `p10k configure` if the prompt looks off
-  * Open a new terminal so zinit installs its plugins (zsh-nvm installs nvm on first load)
+  * Open a new terminal so zinit installs its plugins
 EOF
