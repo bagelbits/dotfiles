@@ -10,10 +10,7 @@ cask "font-fira-code"
 
 # Dev tools
 brew "gh"
-brew "gnupg" # needed for RVM key verification
-brew "pyenv"
-brew "pyenv-virtualenv"
-brew "rbenv"
+brew "mise"
 brew "docker"
 brew "heroku"
 brew "markdownlint-cli"

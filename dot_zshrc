@@ -16,16 +16,10 @@ alias mrt='cd ~/workspace'
 # Goes to root of whatever git repo you're in
 alias rt='cd $(git rev-parse --show-toplevel)'
 
-export NVM_COMPLETION=true
-export NVM_LAZY_LOAD=true
-
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
-
-zinit wait lucid light-mode for \
-    lukechilds/zsh-nvm
 
 zinit wait lucid for \
   atload"unalias gb gbd gcl gco gcp grb grba grbc grbi grbs 2>/dev/null" \
@@ -52,14 +46,7 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # heroku autocomplete setup
 HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 
-# pyenv (installed via Brewfile; no-op until present)
-export PYENV_ROOT="$HOME/.pyenv"
-[ -d "$PYENV_ROOT/bin" ] && export PATH="$PYENV_ROOT/bin:$PATH"
-if command -v pyenv >/dev/null 2>&1; then
-  eval "$(pyenv init --path)"
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-fi
+command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
 
 export PATH="$HOME/.local/bin:$PATH"
 
