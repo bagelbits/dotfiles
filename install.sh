@@ -48,15 +48,6 @@ if ! brew bundle --file "$CHEZMOI_DIR/Brewfile"; then
   warn "brew bundle had failures — mas apps (RunCat Neo) need you to be signed into the App Store. Re-run after signing in."
 fi
 
-# --- oh-my-zsh --------------------------------------------------------------
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  info "Installing oh-my-zsh (keeping the chezmoi-managed .zshrc)"
-  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-else
-  info "oh-my-zsh already installed"
-fi
-
 # --- zinit ------------------------------------------------------------------
 # Cloned directly instead of via the zinit installer so it can't touch .zshrc,
 # which already contains the loader. NVM is handled by zinit (zsh-nvm installs
