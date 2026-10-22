@@ -9,6 +9,7 @@ HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
 setopt extended_history share_history hist_ignore_dups hist_ignore_space hist_expire_dups_first hist_verify hist_find_no_dups hist_reduce_blanks
+setopt auto_cd
 
 # Shortcuts for jumping between workspaces
 alias mrt='cd ~/workspace'
