@@ -8,25 +8,18 @@ fi
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
-setopt extended_history share_history hist_ignore_dups hist_ignore_space hist_expire_dups_first hist_verify
+setopt extended_history share_history hist_ignore_dups hist_ignore_space hist_expire_dups_first hist_verify hist_find_no_dups hist_reduce_blanks
 
 # Shortcuts for jumping between workspaces
 alias mrt='cd ~/workspace'
 
 # Goes to root of whatever git repo you're in
-alias rt='cd $(git rev-parse --show-toplevel)'
+alias rt='cd "$(git rev-parse --show-toplevel)"'
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
-
-zinit wait lucid for \
-  atload"unalias gb gbd gcl gco gcp grb grba grbc grbi grbs 2>/dev/null" \
-  OMZP::git \
-  OMZP::ruby \
-  OMZP::rake \
-  OMZP::rails
 
 zinit wait lucid for \
  atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
@@ -43,12 +36,23 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# heroku autocomplete setup
-HEROKU_AC_ZSH_SETUP_PATH="$HOME/Library/Caches/heroku/autocomplete/zsh_setup" && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+# Deferred to the first prompt: heroku autocomplete and gh token (keeps startup fast)
+_deferred_init() {
+  local f="$HOME/Library/Caches/heroku/autocomplete/zsh_setup"
+  [[ -f $f ]] && source "$f"
+  export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
+  add-zsh-hook -d precmd _deferred_init
+  unfunction _deferred_init
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _deferred_init
+
+# Homebrew (Apple Silicon) and PATH, deduped
+[[ -x /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+typeset -U path PATH
+path=("$HOME/.local/bin" $path)
 
 command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
-
-export PATH="$HOME/.local/bin:$PATH"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -57,9 +61,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
-
-# GitHub token for Claude Code github plugin MCP server (reuses gh CLI keyring login)
-export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
 
 # Machine-local config and secrets, kept out of the dotfiles repo
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
