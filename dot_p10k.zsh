@@ -1659,8 +1659,8 @@
     node=${_mise_cache[$PWD]%%|*}
     ruby=${_mise_cache[$PWD]#*|}
     # Colors and icons match p10k's built-in node_version and rbenv segments
-    [[ -n $node ]] && p10k segment -s NODE -f 7 -b 2 -t $'\uE617  '$node
-    [[ -n $ruby ]] && p10k segment -s RUBY -f 0 -b 1 -t $'\uF219  '$ruby
+    [[ -n $node ]] && p10k segment -s NODE -f 7 -b 2 -i $'\uE617' -t $node
+    [[ -n $ruby ]] && p10k segment -s RUBY -f 0 -b 1 -i $'\uF219' -t $ruby
   }
 
   # Transient prompt works similarly to the builtin transient_rprompt option. It trims down prompt
