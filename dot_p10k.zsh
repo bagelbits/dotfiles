@@ -51,6 +51,7 @@
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
     direnv                  # direnv status (https://direnv.net/)
+    mise                    # node/ruby version from mise, only in node/ruby projects
     asdf                    # asdf version manager (https://github.com/asdf-vm/asdf)
     virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
     anaconda                # conda environment (https://conda.io/)
@@ -113,6 +114,7 @@
     # wifi                  # wifi speed
     # example               # example user-defined segment (see prompt_example function below)
   )
+
 
   # Defines character set used by powerlevel10k. It's best to let `p10k configure` set it for you.
   typeset -g POWERLEVEL9K_MODE=nerdfont-complete
@@ -1701,6 +1703,53 @@
   typeset -g POWERLEVEL9K_EXAMPLE_FOREGROUND=3
   typeset -g POWERLEVEL9K_EXAMPLE_BACKGROUND=1
   # typeset -g POWERLEVEL9K_EXAMPLE_VISUAL_IDENTIFIER_EXPANSION='⭐'
+
+  typeset -gA _mise_cache
+
+  # tool: project marker files (searched up the tree), then fg bg icon matching p10k's built-ins
+  typeset -ga _mise_tools=(node ruby python go rust java php dotnet elixir)
+  typeset -gA _mise_markers=(
+    node   '(package.json|.node-version|.nvmrc)'
+    ruby   '(Gemfile|.ruby-version)'
+    python '(pyproject.toml|requirements.txt|Pipfile|setup.py|.python-version)'
+    go     '(go.mod|.go-version)'
+    rust   '(Cargo.toml|rust-toolchain|rust-toolchain.toml)'
+    java   '(pom.xml|build.gradle|build.gradle.kts|.java-version)'
+    php    '(composer.json|.php-version)'
+    dotnet '(global.json|*.csproj|*.sln)'
+    elixir '(mix.exs|.elixir-version)'
+  )
+  typeset -gA _mise_style=(
+    node   $'7 2 '
+    ruby   $'0 1 '
+    python $'0 4 '
+    go     $'255 2 '
+    rust   $'0 208 '
+    java   $'1 7 '
+    php    $'0 5 '
+    dotnet $'7 5 '
+    elixir $'7 5 '
+  )
+
+  function prompt_mise() {
+    setopt localoptions extendedglob
+    local t v line
+    local -a found style entries
+    if [[ -z ${_mise_cache[$PWD]+x} ]]; then
+      for t in $_mise_tools; do
+        found=((../)#${~_mise_markers[$t]}(N))
+        (( $#found )) || continue
+        v=$(mise current $t 2>/dev/null)
+        [[ -n $v ]] && entries+=("$t $v")
+      done
+      _mise_cache[$PWD]=${(pj:\n:)entries}
+    fi
+    for line in ${(f)_mise_cache[$PWD]}; do
+      t=${line%% *}
+      style=(${=_mise_style[$t]})
+      p10k segment -s ${(U)t} -f $style[1] -b $style[2] -i $style[3] -t ${line#* }
+    done
+  }
 
   # Transient prompt works similarly to the builtin transient_rprompt option. It trims down prompt
   # when accepting a command line. Supported values:
