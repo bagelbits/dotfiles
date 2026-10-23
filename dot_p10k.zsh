@@ -1647,21 +1647,20 @@
 
   function prompt_mise() {
     setopt localoptions extendedglob
-    local dir=$PWD
-    local -a out found
-    if [[ -z ${_mise_cache[$dir]+x} ]]; then
-      local v
+    local -a found
+    local node ruby
+    if [[ -z ${_mise_cache[$PWD]+x} ]]; then
       found=((../)#(package.json|.node-version|.nvmrc)(N))
-      if (( $#found )); then
-        v=$(mise current node 2>/dev/null) && [[ -n $v ]] && out+=("node $v")
-      fi
+      (( $#found )) && node=$(mise current node 2>/dev/null)
       found=((../)#(Gemfile|.ruby-version)(N))
-      if (( $#found )); then
-        v=$(mise current ruby 2>/dev/null) && [[ -n $v ]] && out+=("ruby $v")
-      fi
-      _mise_cache[$dir]=${(j: :)out}
+      (( $#found )) && ruby=$(mise current ruby 2>/dev/null)
+      _mise_cache[$PWD]="$node|$ruby"
     fi
-    [[ -n ${_mise_cache[$dir]} ]] && p10k segment -f 2 -b 0 -t "${_mise_cache[$dir]}"
+    node=${_mise_cache[$PWD]%%|*}
+    ruby=${_mise_cache[$PWD]#*|}
+    # Colors and icons match p10k's built-in node_version and rbenv segments
+    [[ -n $node ]] && p10k segment -s NODE -f 7 -b 2 -i NODE_ICON -t $node
+    [[ -n $ruby ]] && p10k segment -s RUBY -f 0 -b 1 -i RUBY_ICON -t $ruby
   }
 
   # Transient prompt works similarly to the builtin transient_rprompt option. It trims down prompt
