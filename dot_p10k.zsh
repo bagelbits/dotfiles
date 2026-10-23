@@ -1706,22 +1706,49 @@
 
   typeset -gA _mise_cache
 
+  # tool: project marker files (searched up the tree), then fg bg icon matching p10k's built-ins
+  typeset -ga _mise_tools=(node ruby python go rust java php dotnet elixir)
+  typeset -gA _mise_markers=(
+    node   '(package.json|.node-version|.nvmrc)'
+    ruby   '(Gemfile|.ruby-version)'
+    python '(pyproject.toml|requirements.txt|Pipfile|setup.py|.python-version)'
+    go     '(go.mod|.go-version)'
+    rust   '(Cargo.toml|rust-toolchain|rust-toolchain.toml)'
+    java   '(pom.xml|build.gradle|build.gradle.kts|.java-version)'
+    php    '(composer.json|.php-version)'
+    dotnet '(global.json|*.csproj|*.sln)'
+    elixir '(mix.exs|.elixir-version)'
+  )
+  typeset -gA _mise_style=(
+    node   $'7 2 '
+    ruby   $'0 1 '
+    python $'0 4 '
+    go     $'255 2 '
+    rust   $'0 208 '
+    java   $'1 7 '
+    php    $'0 5 '
+    dotnet $'7 5 '
+    elixir $'7 5 '
+  )
+
   function prompt_mise() {
     setopt localoptions extendedglob
-    local -a found
-    local node ruby
+    local t v line
+    local -a found style entries
     if [[ -z ${_mise_cache[$PWD]+x} ]]; then
-      found=((../)#(package.json|.node-version|.nvmrc)(N))
-      (( $#found )) && node=$(mise current node 2>/dev/null)
-      found=((../)#(Gemfile|.ruby-version)(N))
-      (( $#found )) && ruby=$(mise current ruby 2>/dev/null)
-      _mise_cache[$PWD]="$node|$ruby"
+      for t in $_mise_tools; do
+        found=((../)#${~_mise_markers[$t]}(N))
+        (( $#found )) || continue
+        v=$(mise current $t 2>/dev/null)
+        [[ -n $v ]] && entries+=("$t $v")
+      done
+      _mise_cache[$PWD]=${(pj:\n:)entries}
     fi
-    node=${_mise_cache[$PWD]%%|*}
-    ruby=${_mise_cache[$PWD]#*|}
-    # Colors and icons match p10k's built-in node_version and rbenv segments
-    [[ -n $node ]] && p10k segment -s NODE -f 7 -b 2 -i $'\uE617' -t $node
-    [[ -n $ruby ]] && p10k segment -s RUBY -f 0 -b 1 -i $'\uF219' -t $ruby
+    for line in ${(f)_mise_cache[$PWD]}; do
+      t=${line%% *}
+      style=(${=_mise_style[$t]})
+      p10k segment -s ${(U)t} -f $style[1] -b $style[2] -i $style[3] -t ${line#* }
+    done
   }
 
   # Transient prompt works similarly to the builtin transient_rprompt option. It trims down prompt
